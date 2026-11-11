@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AETHER | Cloud FinOps & Infrastructure Economics Intelligence Platform</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233B82F6'><path d='M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z'/></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            finops: {
+              bg: '#0B0F19',
+              panel: '#111827',
+              card: '#161F30',
+              border: '#1F293D',
+              blue: '#3B82F6',
+              emerald: '#10B981',
+              amber: '#F59E0B',
+              rose: '#EF4444'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background-color: #0B0F19; color: #F1F5F9; font-family: 'Inter', sans-serif; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0E1422; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    .pulse-dot { animation: pulse-ring 2s infinite; }
+    @keyframes pulse-ring { 0% { transform: scale(0.95); opacity: 1; } 50% { transform: scale(1.15); opacity: 0.5; } 100% { transform: scale(0.95); opacity: 1; } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-blue-600 selection:text-white">
+
+  <!-- ========================================== -->
+  <!-- TOP PLATFORM HEADER                        -->
+  <!-- ========================================== -->
+  <header class="border-b border-finops-border bg-finops-panel/90 backdrop-blur sticky top-0 z-50 px-6 py-3.5 flex items-center justify-between">
+    <div class="flex items-center space-x-4">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-400 flex items-center justify-center shadow-lg shadow-blue-500/20">
+        <i data-lucide="cloud-lightning" class="w-5 h-5 text-white"></i>
+      </div>
+      <div>
+        <div class="flex items-center space-x-2.5">
+          <h1 class="text-lg font-bold tracking-tight text-white">AETHER</h1>
+          <span class="text-[10px] font-mono uppercase bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded font-semibold">FinOps v1.0</span>
+          <span class="flex items-center text-[10px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded font-mono">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 pulse-dot"></span>MULTI-CLOUD ACTIVE
+          </span>
+        </div>
+        <p class="text-xs text-slate-400">Cloud FinOps & Infrastructure Economics Intelligence Platform</p>
+      </div>
+    </div>
+
+    <!-- Active Navigation Tabs -->
+    <nav class="hidden lg:flex items-center space-x-1 bg-finops-card/80 p-1 rounded-xl border border-finops-border text-xs font-medium">
+      <button onclick="switchTab('overview')" id="tab-btn-overview" class="tab-btn px-3 py-1.5 rounded-lg text-white bg-blue-600 shadow transition-all">Overview</button>
+      <button onclick="switchTab('budgets')" id="tab-btn-budgets" class="tab-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all">Budgets & Allocation</button>
+      <button onclick="switchTab('anomalies')" id="tab-btn-anomalies" class="tab-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all flex items-center">
+        Anomalies <span class="ml-1.5 px-1.5 py-0.2 bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded text-[10px]">3</span>
+      </button>
+      <button onclick="switchTab('optimizations')" id="tab-btn-optimizations" class="tab-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all flex items-center">
+        Rightsizing <span class="ml-1.5 px-1.5 py-0.2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded text-[10px]">$8.0k/mo</span>
+      </button>
+      <button onclick="switchTab('unit-economics')" id="tab-btn-unit-economics" class="tab-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all">Unit Economics</button>
+      <button onclick="switchTab('simulator')" id="tab-btn-simulator" class="tab-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all">Scenario Simulator</button>
+    </nav>
+
+    <div class="flex items-center space-x-3">
+      <button onclick="openAIModal()" class="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-semibold px-3 py-1.5 rounded-lg shadow-md transition-all">
+        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+        <span>AI FinOps Analyst</span>
+      </button>
+      <a href="https://github.com/qusaitailor992006/aether" target="_blank" class="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors border border-finops-border">
+        <i data-lucide="github" class="w-4 h-4"></i>
+      </a>
+    </div>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- MAIN WORKSPACE                             -->
+  <!-- ========================================== -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-6 space-y-6">
+
+    <!-- 1. TAB: EXECUTIVE OVERVIEW -->
+    <section id="view-overview" class="space-y-6">
+      <!-- High Level Metric Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-finops-panel border border-finops-border rounded-xl p-4 shadow-sm relative overflow-hidden">
+          <div class="flex items-center justify-between text-slate-400 text-xs mb-2">
+            <span>MTD Total Cloud Spend</span>
+            <i data-lucide="dollar-sign" class="w-4 h-4 text-blue-400"></i>
+          </div>
+          <div class="text-2xl font-bold font-mono text-white">$148,450.00</div>
+          <div class="mt-2 flex items-center text-xs text-amber-400 font-medium">
+            <i data-lucide="trending-up" class="w-3.5 h-3.5 mr-1"></i>
+            <span>+8.2% vs previous month</span>
+          </div>
+        </div>
+
+        <div class="bg-finops-panel border border-finops-border rounded-xl p-4 shadow-sm relative overflow-hidden">
+          <div class="flex items-center justify-between text-slate-400 text-xs mb-2">
+            <span>Month-End Forecast</span>
+            <i data-lucide="target" class="w-4 h-4 text-cyan-400"></i>
+          </div>
+          <div class="text-2xl font-bold font-mono text-cyan-400">$159,200.00</div>
+          <div class="mt-2 text-xs text-slate-400">
+            95% CI: <span class="font-mono text-slate-300">$153.8k – $164.6k</span>
+          </div>
+        </div>
+
+        <div class="bg-finops-panel border border-finops-border rounded-xl p-4 shadow-sm relative overflow-hidden">
+          <div class="flex items-center justify-between text-slate-400 text-xs mb-2">
+            <span>Enterprise Budget Utilization</span>
+            <i data-lucide="pie-chart" class="w-4 h-4 text-emerald-400"></i>
+          </div>
+          <div class="text-2xl font-bold font-mono text-emerald-400">95.8%</div>
+          <div class="w-full bg-slate-800 h-1.5 rounded-full mt-3 overflow-hidden">
+            <div class="bg-emerald-500 h-full rounded-full" style="width: 95.8%"></div>
+          </div>
+        </div>
+
+        <div class="bg-finops-panel border border-finops-border rounded-xl p-4 shadow-sm relative overflow-hidden">
+          <div class="flex items-center justify-between text-slate-400 text-xs mb-2">
+            <span>Identified Potential Savings</span>
+            <i data-lucide="piggy-bank" class="w-4 h-4 text-emerald-400"></i>
+          </div>
+          <div class="text-2xl font-bold font-mono text-emerald-400">$8,050.00/mo</div>
+          <div class="mt-2 text-xs text-slate-400 flex items-center">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 mr-1.5"></span>
+            <span>4 actionable rightsizing items</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Multi-Cloud Share & Cost Category Breakdown -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Cloud Provider Distribution -->
+        <div class="bg-finops-panel border border-finops-border rounded-xl p-5 space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-semibold text-white flex items-center">
+              <i data-lucide="server" class="w-4 h-4 text-blue-400 mr-2"></i>Multi-Cloud Provider Share
+            </h3>
+            <span class="text-xs text-slate-500 font-mono">100% Tagged</span>
+          </div>
+          <div class="space-y-3 text-xs">
+            <div>
+              <div class="flex justify-between text-slate-300 mb-1">
+                <span class="font-semibold flex items-center"><span class="w-2 h-2 rounded-full bg-blue-500 mr-2"></span>Google Cloud Platform (GCP)</span>
+                <span class="font-mono text-white">$92,040 (62.0%)</span>
+              </div>
+              <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div class="bg-blue-500 h-full rounded-full" style="width: 62.0%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-slate-300 mb-1">
+                <span class="font-semibold flex items-center"><span class="w-2 h-2 rounded-full bg-amber-500 mr-2"></span>Amazon Web Services (AWS)</span>
+                <span class="font-mono text-white">$41,560 (28.0%)</span>
+              </div>
+              <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div class="bg-amber-500 h-full rounded-full" style="width: 28.0%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-slate-300 mb-1">
+                <span class="font-semibold flex items-center"><span class="w-2 h-2 rounded-full bg-cyan-400 mr-2"></span>Microsoft Azure</span>
+                <span class="font-mono text-white">$14,850 (10.0%)</span>
+              </div>
+              <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div class="bg-cyan-400 h-full rounded-full" style="width: 10.0%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Spend by Infrastructure Category -->
+        <div class="bg-finops-panel border border-finops-border rounded-xl p-5 space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-semibold text-white flex items-center">
+              <i data-lucide="layers" class="w-4 h-4 text-indigo-400 mr-2"></i>Infrastructure Category
+            </h3>
+            <span class="text-xs text-slate-500">Spend Distribution</span>
+          </div>
+          <div class="space-y-3 text-xs">
+            <div>
+              <div class="flex justify-between text-slate-300 mb-1">
+                <span>Compute (VMs, Cloud Run, EC2)</span>
+                <span class="font-mono text-white">$71,250 (48.0%)</span>
+              </div>
+              <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div class="bg-indigo-500 h-full rounded-full" style="width: 48.0%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-slate-300 mb-1">
+                <span>Database (BigQuery, Cloud SQL, RDS)</span>
+                <span class="font-mono text-white">$34,140 (23.0%)</span>
+              </div>
+              <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div class="bg-emerald-500 h-full rounded-full" style="width: 23.0%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-slate-300 mb-1">
+                <span>Storage (Cloud Storage, S3)</span>
+                <span class="font-mono text-white">$25,230 (17.0%)</span>
+              </div>
+              <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div class="bg-purple-500 h-full rounded-full" style="width: 17.0%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-slate-300 mb-1">
+                <span>Networking & Cross-Region Egress</span>
+                <span class="font-mono text-white">$17,830 (12.0%)</span>
+              </div>
+              <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div class="bg-rose-500 h-full rounded-full" style="width: 12.0%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FinOps Health Diagnostic -->
+        <div class="bg-finops-panel border border-finops-border rounded-xl p-5 space-y-4">
+          <h3 class="text-sm font-semibold text-white flex items-center">
+            <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400 mr-2"></i>FinOps Governance Scorecard
+          </h3>
+          <div class="space-y-2.5 text-xs">
+            <div class="flex items-center justify-between p-2.5 bg-finops-card rounded-lg border border-finops-border">
+              <span class="text-slate-300">Tagging & Cost Attribution</span>
+              <span class="text-emerald-400 font-mono font-bold">100.0% (Clean)</span>
+            </div>
+            <div class="flex items-center justify-between p-2.5 bg-finops-card rounded-lg border border-finops-border">
+              <span class="text-slate-300">Commitment Coverage (CUD/SP)</span>
+              <span class="text-amber-400 font-mono font-bold">42.5% (Low)</span>
+            </div>
+            <div class="flex items-center justify-between p-2.5 bg-finops-card rounded-lg border border-finops-border">
+              <span class="text-slate-300">Idle / Orphaned Spend</span>
+              <span class="text-rose-400 font-mono font-bold">$2,370/mo</span>
+            </div>
+            <div class="flex items-center justify-between p-2.5 bg-finops-card rounded-lg border border-finops-border">
+              <span class="text-slate-300">Mean Anomaly Resolution</span>
+              <span class="text-blue-400 font-mono font-bold">4.2 Hours</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 30-Day Daily Spend Trend Chart Simulation -->
+      <div class="bg-finops-panel border border-finops-border rounded-xl p-5 space-y-3">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-sm font-semibold text-white flex items-center">
+              <i data-lucide="bar-chart-3" class="w-4 h-4 text-blue-400 mr-2"></i>30-Day Daily Spend Burn Rate & Anomaly Spikes
+            </h3>
+            <p class="text-xs text-slate-400">Daily cost in USD across all active multi-cloud projects</p>
+          </div>
+          <span class="text-xs font-mono text-slate-400">Burn Rate: ~$4,948 / day</span>
+        </div>
+        <div class="h-44 w-full flex items-end gap-1.5 pt-6 pb-2 px-2 border-b border-finops-border">
+          <!-- 30 Visual Bars -->
+          <div class="flex-1 bg-blue-600/60 hover:bg-blue-500 rounded-t h-[65%]" title="Day 1: $4,850"></div>
+          <div class="flex-1 bg-blue-600/60 hover:bg-blue-500 rounded-t h-[68%]" title="Day 2: $4,920"></div>
+          <div class="flex-1 bg-blue-600/60 hover:bg-blue-500 rounded-t h-[62%]" title="Day 3: $4,710"></div>
+          <div class="flex-1 bg-blue-600/60 hover:bg-blue-500 rounded-t h-[64%]" title="Day 4: $4,800"></div>
+          <div class="flex-1 bg-blue-600/60 hover:bg-blue-500 rounded-t h-[70%]" title="Day 5: $5,100"></div>
+          <div class="flex-1 bg-blue-600/60 hover:bg-blue-500 rounded-t h-[66%]" title="Day 6: $4,950"></div>
+          <div class="flex-1 bg-blue-600/60 hover:bg-blue-500 rounded-t h-[63%]" title="Day 7: $4,790"></div>
+          <div class="flex-1 bg-blue-600/60 hover:bg-blue-500 rounded-t h-[67%]" title="Day 8: $4,990"></div>
+          <div class="flex-1 bg-blue-600/60 hover:bg-blue-500 rounded-t h-[69%]" title="Day 9: $5,050"></div>
+          <div class="flex-1 bg-blue-600/60 hover:bg-blue-500 rounded-t h-[64%]" title="Day 10: $4,810"></div>
+          <div class="flex-1 bg-blue-600/60 hover:bg-blue-500 rounded-t h-[66%]" title="Day 11: $4,910"></div>
+          <div class="flex-1 bg-blue-600/60 hover:bg-blue-500 rounded-t h-[71%]" title="Day 12: $5,180"></div>
+          <div class="flex-1 bg-blue-600/60 hover:bg-blue-500 rounded-t h-[67%]" title="Day 13: $4,960"></div>
+          <div class="flex-1 bg-amber-500/80 hover:bg-amber-400 rounded-t h-[78%]" title="Day 14 (RDS Spike): $5,720"></div>
+          <div class="flex-1 bg-blue-600/60 hover:bg-blue-500 rounded-t h-[68%]" title="Day 15: $5,020"></div>
+          <div class="flex-1 bg-blue-600/60 hover:bg-blue-500 rounded-t h-[65%]" title="Day 16: $4,880"></div>
+          <div class="flex-1 bg-blue-600/60 hover:bg-blue-500 rounded-t h-[69%]" title="Day 17: $5,060"></div>
+          <div class="flex-1 bg-blue-600/60 hover:bg-blue-500 rounded-t h-[67%]" title="Day 18: $4,980"></div>
+          <div class="flex-1 bg-blue-600/60 hover:bg-blue-500 rounded-t h-[70%]" title="Day 19: $5,120"></div>
+          <div class="flex-1 bg-amber-500/80 hover:bg-amber-400 rounded-t h-[76%]" title="Day 20 (Egress Surge): $5,550"></div>
+          <div class="flex-1 bg-blue-600/60 hover:bg-blue-500 rounded-t h-[68%]" title="Day 21: $5,010"></div>
+          <div class="flex-1 bg-blue-600/60 hover:bg-blue-500 rounded-t h-[66%]" title="Day 22: $4,940"></div>
+          <div class="flex-1 bg-blue-600/60 hover:bg-blue-500 rounded-t h-[72%]" title="Day 23: $5,240"></div>
+          <div class="flex-1 bg-blue-600/60 hover:bg-blue-500 rounded-t h-[69%]" title="Day 24: $5,080"></div>
+          <div class="flex-1 bg-blue-600/60 hover:bg-blue-500 rounded-t h-[67%]" title="Day 25: $4,970"></div>
+          <div class="flex-1 bg-rose-500 hover:bg-rose-400 rounded-t h-[98%] shadow-lg shadow-rose-500/30" title="Day 26 (CRITICAL BigQuery Scan Spike): $7,280"></div>
+          <div class="flex-1 bg-blue-600/60 hover:bg-blue-500 rounded-t h-[71%]" title="Day 27: $5,190"></div>
+          <div class="flex-1 bg-blue-600/60 hover:bg-blue-500 rounded-t h-[68%]" title="Day 28: $5,040"></div>
+          <div class="flex-1 bg-blue-600/60 hover:bg-blue-500 rounded-t h-[70%]" title="Day 29: $5,110"></div>
+          <div class="flex-1 bg-cyan-400 hover:bg-cyan-300 rounded-t h-[69%]" title="Today: $5,090"></div>
+        </div>
+        <div class="flex justify-between text-[11px] text-slate-500 font-mono px-1">
+          <span>30 Days Ago</span>
+          <span class="text-amber-400 flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-amber-400 mr-1"></span>Warnings</span>
+          <span class="text-rose-400 flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-rose-400 mr-1"></span>Critical Anomaly (Day 26)</span>
+          <span>Today</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. TAB: DEPARTMENT BUDGETS & ALLOCATION -->
+    <section id="view-budgets" class="space-y-6 hidden">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-base font-bold text-white">Department Budgets & Financial Attribution</h2>
+          <p class="text-xs text-slate-400">Tracking departmental cost centers, budget utilization, and variance alerts</p>
+        </div>
+        <div class="text-xs font-mono text-slate-400 bg-finops-panel px-3 py-1.5 rounded-lg border border-finops-border">
+          Total Allocated Budget: <span class="text-white font-bold">$155,000.00</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Engineering -->
+        <div class="bg-finops-panel border border-finops-border rounded-xl p-5 space-y-3">
+          <div class="flex justify-between items-center">
+            <h4 class="font-bold text-white text-sm">Engineering</h4>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">WITHIN BUDGET</span>
+          </div>
+          <div class="flex justify-between text-xs text-slate-400">
+            <span>Spend / Budget:</span>
+            <span class="font-mono text-white">$64,250 / $70,000</span>
+          </div>
+          <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+            <div class="bg-emerald-500 h-full rounded-full" style="width: 91.8%"></div>
+          </div>
+          <div class="flex justify-between text-[11px] text-slate-400">
+            <span>Utilization: 91.8%</span>
+            <span class="text-emerald-400">-$5,750 (-8.2% Var)</span>
+          </div>
+        </div>
+
+        <!-- Data Science (Over Budget) -->
+        <div class="bg-finops-panel border border-rose-500/30 rounded-xl p-5 space-y-3 shadow-lg shadow-rose-500/5">
+          <div class="flex justify-between items-center">
+            <h4 class="font-bold text-white text-sm">Data Science</h4>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 border border-rose-500/30 font-bold">EXCEEDED (+20.5%)</span>
+          </div>
+          <div class="flex justify-between text-xs text-slate-400">
+            <span>Spend / Budget:</span>
+            <span class="font-mono text-rose-400 font-bold">$44,800 / $40,000</span>
+          </div>
+          <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+            <div class="bg-rose-500 h-full rounded-full" style="width: 100%"></div>
+          </div>
+          <div class="flex justify-between text-[11px] text-slate-400">
+            <span class="text-rose-400">Utilization: 112.0%</span>
+            <span class="text-rose-400 font-bold">+$4,800 Over Budget</span>
+          </div>
+        </div>
+
+        <!-- Product -->
+        <div class="bg-finops-panel border border-finops-border rounded-xl p-5 space-y-3">
+          <div class="flex justify-between items-center">
+            <h4 class="font-bold text-white text-sm">Product & Growth</h4>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">WITHIN BUDGET</span>
+          </div>
+          <div class="flex justify-between text-xs text-slate-400">
+            <span>Spend / Budget:</span>
+            <span class="font-mono text-white">$21,400 / $25,000</span>
+          </div>
+          <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+            <div class="bg-emerald-500 h-full rounded-full" style="width: 85.6%"></div>
+          </div>
+          <div class="flex justify-between text-[11px] text-slate-400">
+            <span>Utilization: 85.6%</span>
+            <span class="text-emerald-400">-$3,600 (-14.4% Var)</span>
+          </div>
+        </div>
+
+        <!-- Marketing -->
+        <div class="bg-finops-panel border border-amber-500/30 rounded-xl p-5 space-y-3">
+          <div class="flex justify-between items-center">
+            <h4 class="font-bold text-white text-sm">Marketing</h4>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30 font-bold">AT RISK</span>
+          </div>
+          <div class="flex justify-between text-xs text-slate-400">
+            <span>Spend / Budget:</span>
+            <span class="font-mono text-white">$11,800 / $12,000</span>
+          </div>
+          <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+            <div class="bg-amber-500 h-full rounded-full" style="width: 98.3%"></div>
+          </div>
+          <div class="flex justify-between text-[11px] text-slate-400">
+            <span class="text-amber-400">Utilization: 98.3%</span>
+            <span class="text-amber-400">+$500 Forecast Over</span>
+          </div>
+        </div>
+
+        <!-- Operations -->
+        <div class="bg-finops-panel border border-finops-border rounded-xl p-5 space-y-3">
+          <div class="flex justify-between items-center">
+            <h4 class="font-bold text-white text-sm">Operations</h4>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">WITHIN BUDGET</span>
+          </div>
+          <div class="flex justify-between text-xs text-slate-400">
+            <span>Spend / Budget:</span>
+            <span class="font-mono text-white">$6,200 / $8,000</span>
+          </div>
+          <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+            <div class="bg-emerald-500 h-full rounded-full" style="width: 77.5%"></div>
+          </div>
+          <div class="flex justify-between text-[11px] text-slate-400">
+            <span>Utilization: 77.5%</span>
+            <span class="text-emerald-400">-$1,800 (-22.5% Var)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. TAB: ANOMALY DETECTION -->
+    <section id="view-anomalies" class="space-y-6 hidden">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-base font-bold text-white">Statistical Cloud Cost Anomaly Detection</h2>
+          <p class="text-xs text-slate-400">Automated Z-score (&mu; &plusmn; 2.5&sigma;) and IQR cost spike identification</p>
+        </div>
+        <span class="text-xs font-mono text-rose-400 bg-rose-500/10 border border-rose-500/20 px-3 py-1 rounded-lg">
+          3 Active Anomalies Flagged
+        </span>
+      </div>
+
+      <div class="space-y-4">
+        <!-- Anomaly 1: BigQuery -->
+        <div class="bg-finops-panel border border-rose-500/30 rounded-xl p-5 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center space-x-3">
+              <span class="px-2.5 py-1 rounded bg-rose-500/20 text-rose-400 border border-rose-500/30 font-bold text-xs font-mono">CRITICAL ANOMALY</span>
+              <span class="font-bold text-white text-sm">BigQuery Slot Spike (Data Science)</span>
+            </div>
+            <div class="text-xs font-mono text-slate-400">Detected: 4 Days Ago &bull; Z-Score: <span class="text-rose-400 font-bold">+3.82</span></div>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 p-3 bg-finops-card rounded-lg border border-finops-border text-xs">
+            <div>
+              <span class="text-slate-400 block">Baseline Cost:</span>
+              <span class="font-mono text-white font-bold">$950.00 / day</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block">Actual Cost:</span>
+              <span class="font-mono text-rose-400 font-bold">$2,280.00 / day</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block">Cost Spike:</span>
+              <span class="font-mono text-rose-400 font-bold">+140.0% ($1,330)</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block">Pricing Model:</span>
+              <span class="font-mono text-slate-300">GCP On-Demand Slots</span>
+            </div>
+          </div>
+          <div class="text-xs text-slate-300 bg-slate-900/60 p-3 rounded-lg border border-slate-800">
+            <span class="text-rose-400 font-semibold block mb-1">Root Cause Explanation:</span>
+            Unpartitioned table scan in user recommendation training pipeline triggered 8.4 TB slot consumption in on-demand pricing tier. Remediation: Enforce partitioned table filter guards and quota limits.
+          </div>
+        </div>
+
+        <!-- Anomaly 2: Cross Region Egress -->
+        <div class="bg-finops-panel border border-amber-500/30 rounded-xl p-5 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center space-x-3">
+              <span class="px-2.5 py-1 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30 font-bold text-xs font-mono">WARNING</span>
+              <span class="font-bold text-white text-sm">Cloud NAT & Cross-Region VPC Egress (Engineering)</span>
+            </div>
+            <div class="text-xs font-mono text-slate-400">Detected: 9 Days Ago &bull; Z-Score: <span class="text-amber-400 font-bold">+2.65</span></div>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 p-3 bg-finops-card rounded-lg border border-finops-border text-xs">
+            <div>
+              <span class="text-slate-400 block">Baseline Cost:</span>
+              <span class="font-mono text-white font-bold">$220.00 / day</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block">Actual Cost:</span>
+              <span class="font-mono text-amber-400 font-bold">$495.00 / day</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block">Cost Spike:</span>
+              <span class="font-mono text-amber-400 font-bold">+125.0% ($275)</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block">Status:</span>
+              <span class="text-emerald-400 font-mono font-semibold">RESOLVED</span>
+            </div>
+          </div>
+          <div class="text-xs text-slate-300 bg-slate-900/60 p-3 rounded-lg border border-slate-800">
+            <span class="text-amber-400 font-semibold block mb-1">Root Cause Explanation:</span>
+            Cross-region egress surge between us-central1 and europe-west1 caused by uncompressed model artifact synchronisation. Resolved via intra-region Cloud Storage dual-bucket replication.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. TAB: RIGHTSIZING & OPTIMIZATION -->
+    <section id="view-optimizations" class="space-y-6 hidden">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-base font-bold text-white">FinOps Resource Rightsizing & Optimization Engine</h2>
+          <p class="text-xs text-slate-400">Evidence-based infrastructure optimizations requiring explicit human approval</p>
+        </div>
+        <div class="text-xs font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-lg">
+          Total Potential Recurring Savings: <span class="font-bold text-white">$8,050.00 / month</span>
+        </div>
+      </div>
+
+      <div class="space-y-4" id="recommendations-container">
+        <!-- Rec 1 -->
+        <div class="bg-finops-panel border border-finops-border rounded-xl p-5 space-y-3" id="rec-card-1">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center space-x-3">
+              <span class="px-2.5 py-1 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30 font-bold text-xs font-mono">RIGHTSIZING</span>
+              <span class="font-bold text-white text-sm">Compute Engine Node Pool Downgrade</span>
+              <span class="text-xs text-slate-400 font-mono">(gce-worker-pool-eng)</span>
+            </div>
+            <span class="text-xs text-emerald-400 font-mono font-bold bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">
+              Est. Savings: $1,680.00 / month
+            </span>
+          </div>
+          <p class="text-xs text-slate-300">
+            12 compute nodes running <code class="text-cyan-300 bg-slate-900 px-1 py-0.5 rounded">n2-standard-16</code> have maintained &lt; 18% CPU and &lt; 24% memory utilization over the past 30 days. Downgrade to <code class="text-cyan-300 bg-slate-900 px-1 py-0.5 rounded">n2-standard-8</code>.
+          </p>
+          <div class="flex items-center justify-between pt-2 border-t border-finops-border text-xs">
+            <div class="flex items-center space-x-4 text-slate-400">
+              <span>Effort: <span class="text-emerald-400 font-semibold">LOW</span></span>
+              <span>Confidence: <span class="text-white font-mono font-semibold">96%</span></span>
+              <span>Department: <span class="text-white">Engineering</span></span>
+            </div>
+            <div class="flex space-x-2" id="action-btns-1">
+              <button onclick="approveRecommendation('1', 1680)" class="px-3 py-1.5 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs shadow transition">Approve Rightsizing</button>
+              <button onclick="dismissRecommendation('1')" class="px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs transition">Dismiss</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rec 2 -->
+        <div class="bg-finops-panel border border-finops-border rounded-xl p-5 space-y-3" id="rec-card-2">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center space-x-3">
+              <span class="px-2.5 py-1 rounded bg-purple-500/20 text-purple-400 border border-purple-500/30 font-bold text-xs font-mono">UNATTACHED STORAGE</span>
+              <span class="font-bold text-white text-sm">Orphaned Staging gp3 EBS Volumes</span>
+              <span class="text-xs text-slate-400 font-mono">(ebs-vol-orphan-staging)</span>
+            </div>
+            <span class="text-xs text-emerald-400 font-mono font-bold bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">
+              Est. Savings: $950.00 / month
+            </span>
+          </div>
+          <p class="text-xs text-slate-300">
+            48 unattached gp3 EBS volumes (total 9.6 TB) detached for &gt; 45 days following ML training cluster shutdown. Snapshot to S3 Glacier and delete EBS volumes.
+          </p>
+          <div class="flex items-center justify-between pt-2 border-t border-finops-border text-xs">
+            <div class="flex items-center space-x-4 text-slate-400">
+              <span>Effort: <span class="text-emerald-400 font-semibold">LOW</span></span>
+              <span>Confidence: <span class="text-white font-mono font-semibold">99%</span></span>
+              <span>Department: <span class="text-white">Data Science</span></span>
+            </div>
+            <div class="flex space-x-2" id="action-btns-2">
+              <span class="px-3 py-1.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-semibold text-xs flex items-center">
+                <i data-lucide="check" class="w-3.5 h-3.5 mr-1"></i> APPROVED & SCHEDULED
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rec 3 -->
+        <div class="bg-finops-panel border border-finops-border rounded-xl p-5 space-y-3" id="rec-card-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center space-x-3">
+              <span class="px-2.5 py-1 rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 font-bold text-xs font-mono">SAVINGS PLAN</span>
+              <span class="font-bold text-white text-sm">GCP 1-Year Committed Use Discount (CUD)</span>
+              <span class="text-xs text-slate-400 font-mono">(gcp-compute-cud-plan)</span>
+            </div>
+            <span class="text-xs text-emerald-400 font-mono font-bold bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">
+              Est. Savings: $4,000.00 / month
+            </span>
+          </div>
+          <p class="text-xs text-slate-300">
+            Baseline production compute footprint consistently exceeds 120 vCPUs. Committing 80 vCPUs to a 1-year CUD yields a 32% guaranteed blent discount with zero operational disruption.
+          </p>
+          <div class="flex items-center justify-between pt-2 border-t border-finops-border text-xs">
+            <div class="flex items-center space-x-4 text-slate-400">
+              <span>Effort: <span class="text-emerald-400 font-semibold">LOW</span></span>
+              <span>Confidence: <span class="text-white font-mono font-semibold">98%</span></span>
+              <span>Department: <span class="text-white">Engineering</span></span>
+            </div>
+            <div class="flex space-x-2" id="action-btns-3">
+              <button onclick="approveRecommendation('3', 4000)" class="px-3 py-1.5 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs shadow transition">Approve CUD Commitment</button>
+              <button onclick="dismissRecommendation('3')" class="px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs transition">Dismiss</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. TAB: CLOUD UNIT ECONOMICS -->
+    <section id="view-unit-economics" class="space-y-6 hidden">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-base font-bold text-white">Cloud Unit Economics & Scaling Efficiency</h2>
+          <p class="text-xs text-slate-400">Demonstrating whether cloud spend grows sub-linearly with platform revenue & customers</p>
+        </div>
+        <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-lg font-bold">
+          Positive Economies of Scale (-26.3% Cost / Customer)
+        </span>
+      </div>
+
+      <!-- Key Unit KPI Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-finops-panel border border-finops-border rounded-xl p-4">
+          <span class="text-xs text-slate-400 block mb-1">Cost Per Active Customer</span>
+          <div class="text-2xl font-bold font-mono text-white">$2.58</div>
+          <span class="text-xs text-emerald-400 flex items-center mt-2">
+            <i data-lucide="arrow-down-right" class="w-3.5 h-3.5 mr-1"></i> Down from $3.50 (-26.3%)
+          </span>
+        </div>
+        <div class="bg-finops-panel border border-finops-border rounded-xl p-4">
+          <span class="text-xs text-slate-400 block mb-1">Cost Per Transaction</span>
+          <div class="text-2xl font-bold font-mono text-white">$0.167</div>
+          <span class="text-xs text-emerald-400 flex items-center mt-2">
+            <i data-lucide="arrow-down-right" class="w-3.5 h-3.5 mr-1"></i> Down from $0.267 (-37.5%)
+          </span>
+        </div>
+        <div class="bg-finops-panel border border-finops-border rounded-xl p-4">
+          <span class="text-xs text-slate-400 block mb-1">Cost / 1M API Calls</span>
+          <div class="text-2xl font-bold font-mono text-white">$4,302.90</div>
+          <span class="text-xs text-emerald-400 flex items-center mt-2">
+            <i data-lucide="arrow-down-right" class="w-3.5 h-3.5 mr-1"></i> Improved by 44.3%
+          </span>
+        </div>
+        <div class="bg-finops-panel border border-finops-border rounded-xl p-4">
+          <span class="text-xs text-slate-400 block mb-1">Cloud Spend % of Revenue</span>
+          <div class="text-2xl font-bold font-mono text-cyan-400">7.50%</div>
+          <span class="text-xs text-emerald-400 flex items-center mt-2">
+            <i data-lucide="arrow-down-right" class="w-3.5 h-3.5 mr-1"></i> Down from 11.43%
+          </span>
+        </div>
+      </div>
+
+      <!-- Unit Economics Historical Table -->
+      <div class="bg-finops-panel border border-finops-border rounded-xl overflow-hidden">
+        <div class="p-4 border-b border-finops-border flex justify-between items-center">
+          <h3 class="text-sm font-semibold text-white">6-Month Historical Unit Efficiency Progression</h3>
+          <span class="text-xs text-slate-400 font-mono">June 2026 &ndash; November 2026</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-finops-card text-slate-400 font-semibold border-b border-finops-border">
+              <tr>
+                <th class="p-3 font-mono">Month</th>
+                <th class="p-3">Active Customers</th>
+                <th class="p-3">Transactions</th>
+                <th class="p-3">Monthly Revenue</th>
+                <th class="p-3">Cloud Spend</th>
+                <th class="p-3">Cost / Customer</th>
+                <th class="p-3">Cost / Transaction</th>
+                <th class="p-3">Cloud % Revenue</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-finops-border text-slate-300 font-mono">
+              <tr class="hover:bg-slate-800/40">
+                <td class="p-3 font-bold text-white">2026-06</td>
+                <td class="p-3">32,000</td>
+                <td class="p-3">420,000</td>
+                <td class="p-3 text-emerald-400">$980,000</td>
+                <td class="p-3">$112,000</td>
+                <td class="p-3 text-slate-400">$3.50</td>
+                <td class="p-3 text-slate-400">$0.267</td>
+                <td class="p-3 text-amber-400 font-bold">11.43%</td>
+              </tr>
+              <tr class="hover:bg-slate-800/40">
+                <td class="p-3 font-bold text-white">2026-07</td>
+                <td class="p-3">36,500</td>
+                <td class="p-3">490,000</td>
+                <td class="p-3 text-emerald-400">$1,140,000</td>
+                <td class="p-3">$119,500</td>
+                <td class="p-3 text-slate-400">$3.27</td>
+                <td class="p-3 text-slate-400">$0.244</td>
+                <td class="p-3 text-slate-300">10.48%</td>
+              </tr>
+              <tr class="hover:bg-slate-800/40">
+                <td class="p-3 font-bold text-white">2026-08</td>
+                <td class="p-3">41,200</td>
+                <td class="p-3">580,000</td>
+                <td class="p-3 text-emerald-400">$1,320,000</td>
+                <td class="p-3">$128,000</td>
+                <td class="p-3 text-slate-400">$3.10</td>
+                <td class="p-3 text-slate-400">$0.221</td>
+                <td class="p-3 text-slate-300">9.70%</td>
+              </tr>
+              <tr class="hover:bg-slate-800/40">
+                <td class="p-3 font-bold text-white">2026-09</td>
+                <td class="p-3">46,000</td>
+                <td class="p-3">675,000</td>
+                <td class="p-3 text-emerald-400">$1,520,000</td>
+                <td class="p-3">$136,200</td>
+                <td class="p-3 text-slate-400">$2.96</td>
+                <td class="p-3 text-slate-400">$0.202</td>
+                <td class="p-3 text-slate-300">8.96%</td>
+              </tr>
+              <tr class="hover:bg-slate-800/40">
+                <td class="p-3 font-bold text-white">2026-10</td>
+                <td class="p-3">51,800</td>
+                <td class="p-3">780,000</td>
+                <td class="p-3 text-emerald-400">$1,740,000</td>
+                <td class="p-3">$144,500</td>
+                <td class="p-3 text-slate-400">$2.79</td>
+                <td class="p-3 text-slate-400">$0.185</td>
+                <td class="p-3 text-slate-300">8.30%</td>
+              </tr>
+              <tr class="hover:bg-slate-800/40 bg-blue-950/20">
+                <td class="p-3 font-bold text-cyan-400">2026-11</td>
+                <td class="p-3 font-bold text-white">57,400</td>
+                <td class="p-3 font-bold text-white">890,000</td>
+                <td class="p-3 text-emerald-400 font-bold">$1,980,000</td>
+                <td class="p-3 font-bold text-white">$148,450</td>
+                <td class="p-3 text-emerald-400 font-bold">$2.58</td>
+                <td class="p-3 text-emerald-400 font-bold">$0.167</td>
+                <td class="p-3 text-emerald-400 font-bold">7.50%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. TAB: SCENARIO TRADE-OFF SIMULATOR -->
+    <section id="view-simulator" class="space-y-6 hidden">
+      <div>
+        <h2 class="text-base font-bold text-white">Cost & Performance Trade-off Simulator</h2>
+        <p class="text-xs text-slate-400">Interactive what-if scenario testing for engineering capacity, traffic growth, and commitment discounts</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Interactive Controls -->
+        <div class="bg-finops-panel border border-finops-border rounded-xl p-5 space-y-5">
+          <h3 class="text-sm font-semibold text-white flex items-center">
+            <i data-lucide="sliders" class="w-4 h-4 text-blue-400 mr-2"></i>Scenario Parameters
+          </h3>
+
+          <!-- Control 1: Compute Capacity -->
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-300">Compute Capacity Adjustment:</span>
+              <span id="label-compute-scale" class="font-mono text-cyan-400 font-bold">-20%</span>
+            </div>
+            <input type="range" id="slider-compute" min="-50" max="100" value="-20" step="5" oninput="updateScenarioSimulation()" class="w-full accent-blue-500 cursor-pointer">
+            <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+              <span>-50% (Extreme Cut)</span>
+              <span>0% (Baseline)</span>
+              <span>+100% (Double)</span>
+            </div>
+          </div>
+
+          <!-- Control 2: Traffic Growth Multiplier -->
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-300">Expected Monthly Traffic:</span>
+              <span id="label-traffic-scale" class="font-mono text-cyan-400 font-bold">1.25x (+25%)</span>
+            </div>
+            <input type="range" id="slider-traffic" min="1.0" max="3.0" value="1.25" step="0.05" oninput="updateScenarioSimulation()" class="w-full accent-blue-500 cursor-pointer">
+            <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+              <span>1.0x (Flat)</span>
+              <span>2.0x (Double)</span>
+              <span>3.0x (3x Surge)</span>
+            </div>
+          </div>
+
+          <!-- Control 3: Savings Plan / CUD Coverage -->
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-300">Commitment Coverage (CUD):</span>
+              <span id="label-cud-coverage" class="font-mono text-emerald-400 font-bold">50%</span>
+            </div>
+            <input type="range" id="slider-cud" min="0" max="100" value="50" step="5" oninput="updateScenarioSimulation()" class="w-full accent-blue-500 cursor-pointer">
+            <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+              <span>0% (On-Demand)</span>
+              <span>50%</span>
+              <span>100% (Full CUD)</span>
+            </div>
+          </div>
+
+          <!-- Toggle: Idle Cleanup -->
+          <div class="flex items-center justify-between p-3 bg-finops-card rounded-lg border border-finops-border">
+            <span class="text-xs text-slate-300">Decommission Flagged Idle Resources</span>
+            <input type="checkbox" id="check-idle" checked onchange="updateScenarioSimulation()" class="w-4 h-4 accent-blue-500">
+          </div>
+        </div>
+
+        <!-- Simulation Output Results -->
+        <div class="lg:col-span-2 bg-finops-panel border border-finops-border rounded-xl p-5 space-y-5">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-semibold text-white flex items-center">
+              <i data-lucide="calculator" class="w-4 h-4 text-emerald-400 mr-2"></i>Simulated Monthly Financial & Risk Impact
+            </h3>
+            <span id="sim-risk-badge" class="px-2.5 py-0.5 rounded font-mono text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              LOW OPERATIONAL RISK
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="p-3 bg-finops-card rounded-lg border border-finops-border">
+              <span class="text-xs text-slate-400 block mb-1">Baseline Spend:</span>
+              <span class="text-lg font-mono font-bold text-white">$148,450.00</span>
+            </div>
+            <div class="p-3 bg-finops-card rounded-lg border border-finops-border">
+              <span class="text-xs text-slate-400 block mb-1">Projected Spend:</span>
+              <span id="sim-projected-spend" class="text-lg font-mono font-bold text-cyan-400">$138,210.00</span>
+            </div>
+            <div class="p-3 bg-finops-card rounded-lg border border-finops-border">
+              <span class="text-xs text-slate-400 block mb-1">Net Monthly Impact:</span>
+              <span id="sim-net-delta" class="text-lg font-mono font-bold text-emerald-400">-$10,240.00 (-6.9%)</span>
+            </div>
+          </div>
+
+          <!-- Detailed Breakdown -->
+          <div class="space-y-3 p-4 bg-finops-card rounded-xl border border-finops-border text-xs">
+            <h4 class="font-semibold text-white text-xs mb-2">Simulated Component Breakdown:</h4>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <span class="text-slate-400">Simulated Compute Spend:</span>
+                <span id="sim-comp-spend" class="font-mono text-white font-bold block">$58,400.00</span>
+              </div>
+              <div>
+                <span class="text-slate-400">Commitment (CUD) Discount:</span>
+                <span id="sim-cud-discount" class="font-mono text-emerald-400 font-bold block">-$9,344.00</span>
+              </div>
+              <div>
+                <span class="text-slate-400">Simulated Storage Spend:</span>
+                <span id="sim-stor-spend" class="font-mono text-white font-bold block">$27,600.00</span>
+              </div>
+              <div>
+                <span class="text-slate-400">Simulated Database Spend:</span>
+                <span id="sim-db-spend" class="font-mono text-white font-bold block">$38,100.00</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Operational Risk Assessment Summary -->
+          <div id="sim-risk-box" class="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-xs text-slate-300">
+            <span class="text-emerald-400 font-bold block mb-1">FinOps Architecture Assessment:</span>
+            <span id="sim-risk-text">Safe operational threshold: Infrastructure redundancy and headroom remain within standard FinOps safety limits (CPU utilization remains &lt; 65%).</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========================================== -->
+  <!-- AI FINOPS ASSISTANT MODAL                  -->
+  <!-- ========================================== -->
+  <div id="ai-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-finops-panel border border-finops-border rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-finops-border pb-3">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-8 h-8 rounded-lg bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-white">AI FinOps Analyst</h3>
+            <p class="text-[11px] text-slate-400">Grounded in actual billing logs, anomalies, and rightsizing telemetry</p>
+          </div>
+        </div>
+        <button onclick="closeAIModal()" class="text-slate-400 hover:text-white p-1 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Quick Prompt Chips -->
+      <div class="flex flex-wrap gap-2 text-xs">
+        <button onclick="askPrompt('Why did our cloud bill increase this month?')" class="px-2.5 py-1 bg-finops-card hover:bg-slate-800 border border-finops-border text-slate-300 rounded-lg transition">
+          Why did our bill spike?
+        </button>
+        <button onclick="askPrompt('Which department spends the most and why?')" class="px-2.5 py-1 bg-finops-card hover:bg-slate-800 border border-finops-border text-slate-300 rounded-lg transition">
+          Which department spends the most?
+        </button>
+        <button onclick="askPrompt('What are our top optimization and rightsizing opportunities?')" class="px-2.5 py-1 bg-finops-card hover:bg-slate-800 border border-finops-border text-slate-300 rounded-lg transition">
+          Top optimization opportunities?
+        </button>
+      </div>
+
+      <!-- Chat Response Box -->
+      <div id="ai-response-box" class="min-h-40 max-h-72 overflow-y-auto p-4 bg-finops-card rounded-xl border border-finops-border text-xs text-slate-300 space-y-3 leading-relaxed">
+        <div class="flex items-start space-x-2 text-slate-400">
+          <i data-lucide="bot" class="w-4 h-4 mt-0.5 text-blue-400 flex-shrink-0"></i>
+          <span>Ask me any question regarding your cloud infrastructure spending, departmental budgets, unit economics, or anomaly root causes.</span>
+        </div>
+      </div>
+
+      <!-- Input Box -->
+      <div class="flex space-x-2">
+        <input type="text" id="ai-input" placeholder="e.g., Why is Data Science exceeding its budget?" class="flex-1 bg-finops-card border border-finops-border rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 font-mono">
+        <button onclick="submitAIQuery()" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition">
+          <span>Analyze</span>
+          <i data-lucide="send" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- JAVASCRIPT LOGIC                           -->
+  <!-- ========================================== -->
+  <script>
+    lucide.createIcons();
+
+    // Tab Navigation Switcher
+    function switchTab(tabId) {
+      document.querySelectorAll('section[id^="view-"]').forEach(el => el.classList.add('hidden'));
+      document.getElementById('view-' + tabId).classList.remove('hidden');
+
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('text-white', 'bg-blue-600', 'shadow');
+        btn.classList.add('text-slate-400');
+      });
+
+      const activeBtn = document.getElementById('tab-btn-' + tabId);
+      if (activeBtn) {
+        activeBtn.classList.add('text-white', 'bg-blue-600', 'shadow');
+        activeBtn.classList.remove('text-slate-400');
+      }
+    }
+
+    // Rightsizing Approval Simulator
+    function approveRecommendation(id, savings) {
+      const btnGroup = document.getElementById('action-btns-' + id);
+      if (btnGroup) {
+        btnGroup.innerHTML = `
+          <span class="px-3 py-1.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-semibold text-xs flex items-center">
+            <i data-lucide="check" class="w-3.5 h-3.5 mr-1"></i> APPROVED & SCHEDULED (+$${savings}/mo)
+          </span>
+        `;
+        lucide.createIcons();
+      }
+    }
+
+    function dismissRecommendation(id) {
+      const card = document.getElementById('rec-card-' + id);
+      if (card) {
+        card.style.opacity = '0.4';
+        const btnGroup = document.getElementById('action-btns-' + id);
+        btnGroup.innerHTML = `<span class="text-xs text-slate-500 italic">Dismissed by FinOps Lead</span>`;
+      }
+    }
+
+    // Trade-off Scenario Simulation Engine
+    function updateScenarioSimulation() {
+      const compPct = parseFloat(document.getElementById('slider-compute').value);
+      const traffic = parseFloat(document.getElementById('slider-traffic').value);
+      const cudPct = parseFloat(document.getElementById('slider-cud').value);
+      const idleClean = document.getElementById('check-idle').checked;
+
+      document.getElementById('label-compute-scale').innerText = (compPct > 0 ? '+' : '') + compPct + '%';
+      document.getElementById('label-traffic-scale').innerText = traffic.toFixed(2) + 'x (+' + Math.round((traffic - 1.0) * 100) + '%)';
+      document.getElementById('label-cud-coverage').innerText = cudPct + '%';
+
+      const baseline = 148450.0;
+      let comp = 71250.0 * (1.0 + (compPct / 100.0)) * Math.pow(traffic, 0.85);
+      if (idleClean) comp *= 0.90;
+
+      const cudDiscount = (comp * (cudPct / 100.0)) * 0.32;
+      comp -= cudDiscount;
+
+      const stor = 25230.0 * Math.pow(traffic, 0.40);
+      const db = 34140.0 * Math.pow(traffic, 0.65);
+      const net = 17830.0 * Math.pow(traffic, 0.95);
+
+      const projected = comp + stor + db + net;
+      const delta = projected - baseline;
+      const deltaPct = (delta / baseline * 100);
+
+      document.getElementById('sim-projected-spend').innerText = '$' + projected.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      const deltaElem = document.getElementById('sim-net-delta');
+      deltaElem.innerText = (delta >= 0 ? '+$' : '-$') + Math.abs(delta).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' (' + (deltaPct >= 0 ? '+' : '') + deltaPct.toFixed(1) + '%)';
+      deltaElem.className = 'text-lg font-mono font-bold ' + (delta <= 0 ? 'text-emerald-400' : 'text-rose-400');
+
+      document.getElementById('sim-comp-spend').innerText = '$' + comp.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      document.getElementById('sim-cud-discount').innerText = '-$' + cudDiscount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      document.getElementById('sim-stor-spend').innerText = '$' + stor.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      document.getElementById('sim-db-spend').innerText = '$' + db.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+      // Risk Evaluation
+      const badge = document.getElementById('sim-risk-badge');
+      const riskBox = document.getElementById('sim-risk-box');
+      const riskText = document.getElementById('sim-risk-text');
+
+      if (compPct < -25 && traffic > 1.25) {
+        badge.className = 'px-2.5 py-0.5 rounded font-mono text-xs font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30';
+        badge.innerText = 'CRITICAL OPERATIONAL RISK';
+        riskBox.className = 'p-3 bg-rose-500/10 border border-rose-500/30 rounded-lg text-xs text-slate-300';
+        riskText.innerText = 'High risk of p99 latency degradation, pod evictions, and HTTP 504 timeouts due to aggressive compute reductions while traffic surges.';
+      } else if (compPct < -15 || traffic > 1.5) {
+        badge.className = 'px-2.5 py-0.5 rounded font-mono text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30';
+        badge.innerText = 'MODERATE OPERATIONAL RISK';
+        riskBox.className = 'p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg text-xs text-slate-300';
+        riskText.innerText = 'Workloads may experience temporary CPU throttling during peak traffic periods (>75% load). Recommend canary benchmarking.';
+      } else {
+        badge.className = 'px-2.5 py-0.5 rounded font-mono text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
+        badge.innerText = 'LOW OPERATIONAL RISK';
+        riskBox.className = 'p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-xs text-slate-300';
+        riskText.innerText = 'Safe operational threshold: Infrastructure redundancy and headroom remain within standard FinOps safety limits (CPU < 65%).';
+      }
+    }
+
+    // AI Modal Controls
+    function openAIModal() {
+      document.getElementById('ai-modal').classList.remove('hidden');
+    }
+
+    function closeAIModal() {
+      document.getElementById('ai-modal').classList.add('hidden');
+    }
+
+    function askPrompt(text) {
+      document.getElementById('ai-input').value = text;
+      submitAIQuery();
+    }
+
+    function submitAIQuery() {
+      const input = document.getElementById('ai-input');
+      const query = input.value.trim();
+      if (!query) return;
+
+      const box = document.getElementById('ai-response-box');
+      box.innerHTML += `
+        <div class="flex items-start space-x-2 text-white justify-end">
+          <div class="bg-blue-600 px-3 py-1.5 rounded-xl rounded-tr-none text-xs max-w-md">${query}</div>
+        </div>
+      `;
+
+      let answer = "";
+      const qLower = query.toLowerCase();
+      if (qLower.includes("increase") || qLower.includes("spike") || qLower.includes("why") || qLower.includes("bill")) {
+        answer = "Total cloud spend reached $148,450.00 (+8.2% vs prior month). The primary driver was a <strong>critical anomaly in BigQuery (Data Science)</strong> 4 days ago where unpartitioned table scans caused a <strong>140% daily cost spike ($2,280 vs $950 baseline)</strong>. Additionally, Cross-Region VPC Egress experienced a $275 surge due to uncompressed model synchronization.";
+      } else if (qLower.includes("department") || qLower.includes("team") || qLower.includes("who spends")) {
+        answer = "<strong>Engineering</strong> is the largest cost center at $64,250 (91.8% of its $70k budget). However, <strong>Data Science is currently exceeding budget by +20.5% ($44,800 spend vs $40,000 budget)</strong> due to heavy BigQuery slot consumption and orphaned ML staging disks.";
+      } else if (qLower.includes("saving") || qLower.includes("optim") || qLower.includes("cut")) {
+        answer = "AETHER has identified <strong>$8,050.00/month in recurring potential savings</strong> across 4 opportunities: (1) Downgrade 12 underutilized n2-standard-16 Compute nodes ($1,680/mo), (2) Delete 48 orphaned gp3 EBS volumes ($950/mo), (3) Decommission idle Cloud SQL replica ($1,420/mo), and (4) Enroll 80 vCPUs in a 1-year CUD ($4,000/mo).";
+      } else {
+        answer = "Current enterprise cloud spend stands at $148,450.00 with 95.8% budget utilization. Tagging attribution is at 100%. Cost per active customer has successfully decreased by -26.3% ($3.50 down to $2.58), confirming positive economies of scale as platform volume expands.";
+      }
+
+      box.innerHTML += `
+        <div class="flex items-start space-x-2 text-slate-300">
+          <div class="w-6 h-6 rounded bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 flex-shrink-0 mt-0.5">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+          </div>
+          <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800 text-xs leading-relaxed flex-1">${answer}</div>
+        </div>
+      `;
+
+      input.value = "";
+      box.scrollTop = box.scrollHeight;
+      lucide.createIcons();
+    }
+  </script>
+</body>
+</html>
